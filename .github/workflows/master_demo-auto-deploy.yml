@@ -34,7 +34,7 @@ jobs:
         name: ASP-app
         path: '/published/**'
 
-  deploy:
+  deploy-site-1:
     runs-on: 'windows-latest'
     needs: build
     environment:
@@ -54,4 +54,26 @@ jobs:
         app-name: 'demo-auto-deploy'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_b52e9bfefc47460ca17292e8ab831dc2 }}
+        package: .
+
+  deploy-site-2:
+    runs-on: 'windows-latest'
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+    - name: Download artifact from build job
+      uses: actions/download-artifact@v2
+      with:
+        name: ASP-app
+
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'demo-auto-deploy-site-2'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_site_2 }}
         package: .
