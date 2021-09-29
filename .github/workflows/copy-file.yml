@@ -1,6 +1,9 @@
 name: Copy Files
 
 on:
+  push:
+    branches:
+      - master
   workflow_dispatch:
 
 jobs:
@@ -12,6 +15,7 @@ jobs:
 
     - name: Check Env
       run: |
+        Get-Childitem -Path "C:\Program Files (x86)"  -Recurse -Include *gacutil*
         echo $PSversionTable
         pwd
         Get-ChildItem -Path Env:
